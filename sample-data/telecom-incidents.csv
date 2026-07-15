@@ -1,0 +1,5 @@
+Timestamp,Alarm,Network Element,Severity,Status
+2026-06-25 10:12:01,PFCP Association Failure,UPF,Critical,Open
+2026-06-25 10:13:40,N4 Session Failure,SMF,High,Open
+2026-06-25 10:15:12,Registration Reject,AMF,Medium,Closed
+2026-06-25 10:18:22,Subscriber Lookup Failed,UDM,Low,Closed

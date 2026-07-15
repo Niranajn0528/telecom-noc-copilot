@@ -1,0 +1,14 @@
+{
+  "incident": "PFCP Association Failure",
+  "severity": "Critical",
+  "network_element": "UPF",
+  "probable_root_cause": "Loss of N4 connectivity between SMF and UPF.",
+  "recommendation": [
+    "Verify PFCP heartbeat.",
+    "Check UPF availability.",
+    "Validate firewall connectivity.",
+    "Restart PFCP association if required."
+  ],
+  "escalation": true,
+  "confidence": "97%"
+}

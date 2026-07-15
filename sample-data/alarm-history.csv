@@ -1,0 +1,5 @@
+Alarm,Occurrences,Most Affected Node
+PFCP Association Failure,124,UPF
+N4 Session Failure,98,SMF
+Registration Reject,71,AMF
+Subscriber Lookup Failed,33,UDM
