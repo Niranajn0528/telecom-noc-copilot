@@ -1,0 +1,166 @@
+{
+  "name": "Telecom NOC Copilot",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MjBoo7W1jfRm1_2Nv_0fkShX_x4km_2RPcja33B2vBU",
+          "mode": "list",
+          "cachedResultName": "AI Email Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MjBoo7W1jfRm1_2Nv_0fkShX_x4km_2RPcja33B2vBU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1795267900,
+          "mode": "list",
+          "cachedResultName": "Telecom_Incident_History",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MjBoo7W1jfRm1_2Nv_0fkShX_x4km_2RPcja33B2vBU/edit#gid=1795267900"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b7a890e9-7c4a-4d8b-b016-0a576995d8d0",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OMlYWQEiATS1gTlF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Engineer Question:\n\n{{$('Chat').item.json.chatInput}}\n\nHistorical Incident Records:\n\n{{$json.history}}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a Telecom NOC Copilot.\n\nYou have access to historical telecom incidents.\n\nFor every query provide:\n\n1. Issue Summary\n2. Likely Root Causes\n3. Similar Historical Incidents\n4. Recommended Checks\n5. Recommended Fix\n6. Escalation Recommendation\n\nBe concise and technical.\n\nIf historical incidents are available, use them to support your answer."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        624,
+        0
+      ],
+      "id": "fe72bcfb-f47c-48b6-bcab-1c81cf3eb5a3",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        560,
+        128
+      ],
+      "id": "a87e92f3-9a97-4050-8da0-f4e13dfe5e49",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "PlAjJlgiud39IeoJ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\n\nlet history = \"\";\n\nfor (const row of rows) {\n  history += `\nIssue Type: ${row.json[\"Issue Type\"]}\nSeverity: ${row.json[\"Severity\"]}\nRoot Cause: ${row.json[\"Root Cause\"]}\n-------------------------\n`;\n}\n\nreturn [{\n  json: {\n    history\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6a54f0bf-fa0f-45d1-bf97-dacf36a2be4e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "acfde177-7948-4896-87cf-709fd0775c29",
+      "name": "Chat",
+      "webhookId": "2a1b3e1f-8dc0-413e-a9aa-80f38508ebb4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a970a1c7-8c6e-4643-8fb8-61c1ebcb75a8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fadcc29a1ef0d6c91da020448df2bbe59980d81b38e29237657fe57d15485c80"
+  },
+  "id": "0TT8NNLDRof21TPu",
+  "tags": []
+}
